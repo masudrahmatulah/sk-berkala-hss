@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: kgb_db
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: kgb_pns
+      MYSQL_USER: userkgb
+      MYSQL_PASSWORD: passkgb
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+  adminer:
+    image: adminer
+    container_name: kgb_adminer
+    ports:
+      - "8080:8080"
+
+  app:
+    build: .           # <-- ganti dari "image" jadi "build"
+    container_name: kgb_app
+    volumes:
+      - ./app:/var/www/html
+    ports:
+      - "8000:80"
+    depends_on:
+      - db
+
+volumes:
+  db_data:
